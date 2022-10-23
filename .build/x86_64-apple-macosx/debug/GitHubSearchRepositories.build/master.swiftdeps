@@ -1,0 +1,11 @@
+version: "Apple Swift version 5.7 (swiftlang-5.7.0.127.4 clang-1400.0.29.50)"
+options: "9e2a95b0caab2a8f6f98886435cecd28e5fed85aa051b57db213084ec6aa7bc0"
+build_start_time: [1666540217, 370671033]
+build_end_time: [1666540224, 404182910]
+inputs:
+  "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/Sources/GitHubSearchRepositories/Models/GithubRepositoryBrief.swift": [1666539854, 393719196]
+  "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/Sources/GitHubSearchRepositories/Networking/HTTPClient.swift": [1666539854, 396123886]
+  ? "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/Sources/GitHubSearchRepositories/Repositories/GitHubSearchRepositories/GitHubSearchRepoRepository.swift"
+  : [1666539854, 397196292]
+  ? "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/Sources/GitHubSearchRepositories/Repositories/GitHubSearchRepositories/GitHubSearchRepositoriesCommand.swift"
+  : !private [1666539854, 397586584]

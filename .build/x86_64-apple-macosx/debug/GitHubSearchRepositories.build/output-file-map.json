@@ -1,0 +1,29 @@
+{
+  "": {
+    "swift-dependencies": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/master.swiftdeps"
+  },
+  "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/Sources/GitHubSearchRepositories/Models/GithubRepositoryBrief.swift": {
+    "dependencies": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Models/GithubRepositoryBrief.d",
+    "object": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Models/GithubRepositoryBrief.swift.o",
+    "swiftmodule": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Models/GithubRepositoryBrief~partial.swiftmodule",
+    "swift-dependencies": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Models/GithubRepositoryBrief.swiftdeps"
+  },
+  "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/Sources/GitHubSearchRepositories/Networking/HTTPClient.swift": {
+    "dependencies": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Networking/HTTPClient.d",
+    "object": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Networking/HTTPClient.swift.o",
+    "swiftmodule": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Networking/HTTPClient~partial.swiftmodule",
+    "swift-dependencies": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Networking/HTTPClient.swiftdeps"
+  },
+  "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/Sources/GitHubSearchRepositories/Repositories/GitHubSearchRepositories/GitHubSearchRepoRepository.swift": {
+    "dependencies": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Repositories/GitHubSearchRepositories/GitHubSearchRepoRepository.d",
+    "object": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Repositories/GitHubSearchRepositories/GitHubSearchRepoRepository.swift.o",
+    "swiftmodule": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Repositories/GitHubSearchRepositories/GitHubSearchRepoRepository~partial.swiftmodule",
+    "swift-dependencies": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Repositories/GitHubSearchRepositories/GitHubSearchRepoRepository.swiftdeps"
+  },
+  "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/Sources/GitHubSearchRepositories/Repositories/GitHubSearchRepositories/GitHubSearchRepositoriesCommand.swift": {
+    "dependencies": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Repositories/GitHubSearchRepositories/GitHubSearchRepositoriesCommand.d",
+    "object": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Repositories/GitHubSearchRepositories/GitHubSearchRepositoriesCommand.swift.o",
+    "swiftmodule": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Repositories/GitHubSearchRepositories/GitHubSearchRepositoriesCommand~partial.swiftmodule",
+    "swift-dependencies": "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/Repositories/GitHubSearchRepositories/GitHubSearchRepositoriesCommand.swiftdeps"
+  }
+}

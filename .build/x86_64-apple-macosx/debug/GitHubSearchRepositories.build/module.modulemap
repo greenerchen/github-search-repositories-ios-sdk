@@ -1,0 +1,4 @@
+module GitHubSearchRepositories {
+    header "/Users/greener/Projects/GitHubSearchRepositories-ios-spm/.build/x86_64-apple-macosx/debug/GitHubSearchRepositories.build/GitHubSearchRepositories-Swift.h"
+    requires objc
+}
