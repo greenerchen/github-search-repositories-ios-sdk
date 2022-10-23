@@ -1,7 +1,7 @@
 GitHubSearchRepositories is a library to search repositories with platform and organization on GitHub.
 
 ## Requirements
-iOS 16+
+iOS 16+ \
 Swift 5.0+
 
 ## Installation
@@ -15,4 +15,23 @@ To integrate GitHubSearchRepositories into your Xcode project using Swift Packag
 dependencies: [
     .package(url: "https://github.com/greenerchen/GitHubSearchRepositories-ios-spm.git", .upToNextMajor(from: "1.0.0"))
 ]
+```
+
+## Usage
+```swift
+import GitHubSearchRepositories
+
+struct Demo {
+    let repository = GitHubSearchRepoRepository()
+    
+    func demo() {
+        repository.searchRepositories(withPlatform: .ios, inOrganization: "rakutentech") { result in
+            switch result {
+            case .success(let repos):
+                debugPrint(repos)
+            case .failure(let error):
+                debugPrint(error.localizedDescription)
+        }
+    }
+}
 ```
