@@ -55,19 +55,18 @@ public struct GitHubSearchRepositoriesCommand: GitHubSearchRepositoriesCommandPr
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                let items = json["items"] as? [AnyObject] {
                 for item in items {
-                    if let name = item["name"] as? String,
-                       let isPrivate = item["private"] as? Bool,
-                       let repoDescription = item["description"] as? String,
-                       let language = item["language"] as? String {
-                        let model = GithubRepositoryBrief(
-                            name: name,
-                            isPrivate: isPrivate,
-                            repoDescription: repoDescription,
-                            language: language
-                        )
-                        debugPrint(model.description)
-                        models.append(model)
-                    }
+                    let name = item["name"] as? String
+                    let isPrivate = item["private"] as? Bool
+                    let repoDescription = item["description"] as? String
+                    let language = item["language"] as? String
+                    let model = GithubRepositoryBrief(
+                        name: name ?? "",
+                        isPrivate: isPrivate ?? false,
+                        repoDescription: repoDescription ?? "",
+                        language: language ?? ""
+                    )
+                    debugPrint(model.description)
+                    models.append(model)
                 }
             }
             return models
