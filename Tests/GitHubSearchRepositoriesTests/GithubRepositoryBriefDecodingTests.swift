@@ -11,34 +11,86 @@ import XCTest
 final class GithubRepositoryBriefDecodingTests: XCTestCase {
 
     var sut: GitHubSearchRepositoriesCommandProtocol!
-    
     override func setUpWithError() throws {
-        let baseUrl = URL(string: "https://api.github.com/search/repositories")!
-        sut = GitHubSearchRepositoriesCommand(
-            baseUrl: baseUrl,
-            platform: Platform.android,
-            organization: "anytech",
-            httpClient: MockHTTPClient()
-        )
     }
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testGithubRepositoryBriefDecoding() throws {
+    func test_givenFullRequiredPropertiesJson_expectDecodingSucceeds() throws {
         let exp = expectation(description: "Decoding")
+        let stubbedJson = StubJsonFactory.makeFullRequirePropertiesJsonString()
+        let mockHTTPClient = MockHTTPClient(stubbedJson: stubbedJson)
+        sut = GitHubSearchRepositoriesCommandFactory.makeCommand(withHTTPClient: mockHTTPClient)
         sut.completion = { result in
             switch result {
             case .success(let repos):
                 XCTAssertTrue(repos.count == 2, "\(repos)")
-                let repo1: GithubRepositoryBrief = repos[0]
-                XCTAssertEqual(repo1.name, "stub-1")
-                XCTAssertEqual(repo1.isPrivate, false)
-                XCTAssertEqual(repo1.repoDescription, "stub description 1")
-                XCTAssertEqual(repo1.language, "Kotlin")
+                for (index, repo) in repos.enumerated() {
+                    if index == 0 {
+                        XCTAssertEqual(repo.name, "stub-1")
+                        XCTAssertEqual(repo.isPrivate, false)
+                        XCTAssertEqual(repo.repoDescription, "stub description 1")
+                        XCTAssertEqual(repo.language, "Kotlin")
+                    } else {
+                        XCTAssertEqual(repo.name, "stub-2")
+                        XCTAssertEqual(repo.isPrivate, true)
+                        XCTAssertEqual(repo.repoDescription, "stub description 2")
+                        XCTAssertEqual(repo.language, "Java")
+                    }
+                }
             case .failure(let error):
                 XCTFail(error.localizedDescription)
+            }
+            exp.fulfill()
+        }
+        sut.execute()
+        wait(for: [exp], timeout: 10)
+    }
+    
+    func test_givenPartialRequiredPropertiesJson_expectDecodingSucceeds() throws {
+        let exp = expectation(description: "Decoding")
+        let stubbedJson = StubJsonFactory.makePartialRequirePropertiesJsonString()
+        let mockHTTPClient = MockHTTPClient(stubbedJson: stubbedJson)
+        sut = GitHubSearchRepositoriesCommandFactory.makeCommand(withHTTPClient: mockHTTPClient)
+        sut.completion = { result in
+            switch result {
+            case .success(let repos):
+                XCTAssertTrue(repos.count == 2, "\(repos)")
+                for (index, repo) in repos.enumerated() {
+                    if index == 0 {
+                        XCTAssertEqual(repo.name, "stub-1")
+                        XCTAssertEqual(repo.isPrivate, false)
+                        XCTAssertEqual(repo.repoDescription, "stub description 1")
+                        XCTAssertEqual(repo.language, "Kotlin")
+                    } else {
+                        XCTAssertEqual(repo.name, "stub-2")
+                        XCTAssertEqual(repo.isPrivate, true)
+                        XCTAssertEqual(repo.repoDescription, "")
+                        XCTAssertEqual(repo.language, "Java")
+                    }
+                }
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+            exp.fulfill()
+        }
+        sut.execute()
+        wait(for: [exp], timeout: 10)
+    }
+
+    func test_givenInvalidJson_expectDecodingFailed() throws {
+        let exp = expectation(description: "Decoding")
+        let stubbedJson = StubJsonFactory.makeInvalidJsonString()
+        let mockHTTPClient = MockHTTPClient(stubbedJson: stubbedJson)
+        sut = GitHubSearchRepositoriesCommandFactory.makeCommand(withHTTPClient: mockHTTPClient)
+        sut.completion = { result in
+            switch result {
+            case .success(let repos):
+                XCTFail("Expect to get and error")
+            case .failure(let error):
+                XCTAssertNotNil(error)
             }
             exp.fulfill()
         }

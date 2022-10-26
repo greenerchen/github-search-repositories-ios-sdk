@@ -8,26 +8,20 @@
 import Foundation
 @testable import GitHubSearchRepositories
 
+enum MockHTTPClientError: Error {
+    case noStubbedJson
+}
+
 struct MockHTTPClient: HTTPClientProtocol {
+    var stubbedJson: String?
+    
     func get(url: URL, completion: @escaping GitHubSearchRepositories.HTTP_RESPONSE) {
-        let stubJson = [
-            "items": [
-                [
-                    "name": "stub-1",
-                    "private": false,
-                    "description": "stub description 1",
-                    "language": "Kotlin"
-                ],
-                [
-                    "name": "stub-2",
-                    "private": true,
-                    "description": "stub description 2",
-                    "language": "Java"
-                ]
-            ]
-        ]
         do {
-            let data = try JSONSerialization.data(withJSONObject: stubJson)
+            guard let stubbedJson = stubbedJson else {
+                completion(.failure(MockHTTPClientError.noStubbedJson))
+                return
+            }
+            let data = stubbedJson.data(using: .utf8)!
             completion(.success(data))
         } catch {
             completion(.failure(error))
