@@ -1,5 +1,5 @@
 //
-//  GithubRepositoryBrief.swift
+//  GithubRepository.swift
 //  GitHubSearchRepositories
 //
 //  Created by Greener Chen on 2022/10/23.
@@ -7,17 +7,17 @@
 
 import Foundation
 
-public struct GithubRepositoryBrief: Codable {
+public struct GithubRepository: Codable {
     let name: String
     let isPrivate: Bool
     let repoDescription: String
     let language: String
 }
 
-extension GithubRepositoryBrief: CustomStringConvertible {
+extension GithubRepository: CustomStringConvertible {
     public var description: String {
         """
-        GithubRepositoryBrief
+        GithubRepository
             name: \(name)
             isPrivate: \(isPrivate)
             repoDescription: \(repoDescription)
