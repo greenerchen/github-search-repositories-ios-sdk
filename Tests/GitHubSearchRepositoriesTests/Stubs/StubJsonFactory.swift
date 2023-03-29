@@ -8,7 +8,7 @@
 import Foundation
 
 enum StubJsonFactory {
-    static func makeFullRequirePropertiesJsonString() -> String {
+    static func makeAllPropertiesJsonString() -> String {
         #"""
 {
     "total_count": 2,
@@ -39,9 +39,9 @@ enum StubJsonFactory {
     "items": [
         {
             "name": "stub-1",
-            "private": null,
-            "description": "stub description 1",
-            "language": "Kotlin"
+            "private": false,
+            "description": null,
+            "language": null
         },
         {
             "name": "stub-2",

@@ -11,8 +11,8 @@ import XCTest
 @testable import GitHubSearchRepositories
 
 final class GithubRepositoryMapperTests: XCTestCase {
-    func test_givenFullRequiredPropertiesJson_expectDecodingSucceeds() {
-        let stubbedJson = StubJsonFactory.makeFullRequirePropertiesJsonString()
+    func test_givenAllPropertiesJson_expectDecodingSucceeds() {
+        let stubbedJson = StubJsonFactory.makeAllPropertiesJsonString()
         
         let sut = GithubRepositoryMapper()
         do {

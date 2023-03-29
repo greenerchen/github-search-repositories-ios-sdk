@@ -20,7 +20,7 @@ final class GithubRepositoryDecodingTests: XCTestCase {
 
     func test_givenFullRequiredPropertiesJson_expectDecodingSucceeds() throws {
         let exp = expectation(description: "Decoding")
-        let stubbedJson = StubJsonFactory.makeFullRequirePropertiesJsonString()
+        let stubbedJson = StubJsonFactory.makeAllPropertiesJsonString()
         let mockHTTPClient = MockHTTPClient(stubbedJson: stubbedJson)
         sut = GitHubSearchRepositoriesCommandFactory.makeCommand(withHTTPClient: mockHTTPClient)
         sut.completion = { result in
