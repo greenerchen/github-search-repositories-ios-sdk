@@ -23,8 +23,8 @@ struct GithubRepositoryMapper {
     struct Item: Decodable {
         let name: String
         let isPrivate: Bool
-        let repoDescription: String
-        let language: String
+        let repoDescription: String?
+        let language: String?
         
         enum CodingKeys: String, CodingKey {
             case name
@@ -37,16 +37,16 @@ struct GithubRepositoryMapper {
             GithubRepository(
                 name: name,
                 isPrivate: isPrivate,
-                repoDescription: repoDescription,
-                language: language)
+                repoDescription: repoDescription ?? "",
+                language: language ?? "")
         }
         
         init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<GithubRepositoryMapper.Item.CodingKeys> = try decoder.container(keyedBy: GithubRepositoryMapper.Item.CodingKeys.self)
             self.name = try container.decode(String.self, forKey: GithubRepositoryMapper.Item.CodingKeys.name)
             self.isPrivate = try container.decodeIfPresent(Bool.self, forKey: GithubRepositoryMapper.Item.CodingKeys.isPrivate) ?? false
-            self.repoDescription = try container.decode(String.self, forKey: GithubRepositoryMapper.Item.CodingKeys.repoDescription) ?? ""
-            self.language = try container.decode(String.self, forKey: GithubRepositoryMapper.Item.CodingKeys.language) ?? ""
+            self.repoDescription = try container.decodeIfPresent(String.self, forKey: GithubRepositoryMapper.Item.CodingKeys.repoDescription)
+            self.language = try container.decodeIfPresent(String.self, forKey: GithubRepositoryMapper.Item.CodingKeys.language)
         }
     }
     

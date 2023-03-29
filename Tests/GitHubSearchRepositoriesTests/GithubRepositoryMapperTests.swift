@@ -31,4 +31,25 @@ final class GithubRepositoryMapperTests: XCTestCase {
         }
     }
     
+    
+    func test_givenEmptyOptionalPropertiesJson_expectDecodingSucceeds() {
+        let stubbedJson = StubJsonFactory.makePartialRequirePropertiesJsonString()
+        
+        let sut = GithubRepositoryMapper()
+        do {
+            let repos = try sut.map(data: Data(stubbedJson.utf8))
+            XCTAssertTrue(repos.count == 2, "\(repos)")
+            XCTAssertEqual(repos[0].name, "stub-1")
+            XCTAssertEqual(repos[0].isPrivate, false)
+            XCTAssertEqual(repos[0].repoDescription, "")
+            XCTAssertEqual(repos[0].language, "")
+            XCTAssertEqual(repos[1].name, "stub-2")
+            XCTAssertEqual(repos[1].isPrivate, true)
+            XCTAssertEqual(repos[1].repoDescription, "")
+            XCTAssertEqual(repos[1].language, "Java")
+        } catch {
+            XCTFail("Decoding failed, \(error)")
+        }
+    }
+    
 }
