@@ -31,6 +31,21 @@ final class GithubRepositoryMapperTests: XCTestCase {
         }
     }
     
+    func test_givenExampleResponseJson_expectDecodingSucceeds() {
+        let stubbedJson = StubJsonFactory.makeExampleResponseJsonString()
+        
+        let sut = GithubRepositoryMapper()
+        do {
+            let repos = try sut.map(data: Data(stubbedJson.utf8))
+            XCTAssertTrue(repos.count == 1, "\(repos)")
+            XCTAssertEqual(repos[0].name, "Tetris")
+            XCTAssertEqual(repos[0].isPrivate, false)
+            XCTAssertEqual(repos[0].repoDescription, "A C implementation of Tetris using Pennsim through LC4")
+            XCTAssertEqual(repos[0].language, "Assembly")
+        } catch {
+            XCTFail("Decoding failed, \(error)")
+        }
+    }
     
     func test_givenEmptyOptionalPropertiesJson_expectDecodingSucceeds() {
         let stubbedJson = StubJsonFactory.makePartialRequirePropertiesJsonString()
