@@ -44,7 +44,7 @@ struct GithubRepositoryMapper {
         init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<GithubRepositoryMapper.Item.CodingKeys> = try decoder.container(keyedBy: GithubRepositoryMapper.Item.CodingKeys.self)
             self.name = try container.decode(String.self, forKey: GithubRepositoryMapper.Item.CodingKeys.name)
-            self.isPrivate = try container.decodeIfPresent(Bool.self, forKey: GithubRepositoryMapper.Item.CodingKeys.isPrivate) ?? false
+            self.isPrivate = try container.decode(Bool.self, forKey: GithubRepositoryMapper.Item.CodingKeys.isPrivate)
             self.repoDescription = try container.decodeIfPresent(String.self, forKey: GithubRepositoryMapper.Item.CodingKeys.repoDescription)
             self.language = try container.decodeIfPresent(String.self, forKey: GithubRepositoryMapper.Item.CodingKeys.language)
         }
