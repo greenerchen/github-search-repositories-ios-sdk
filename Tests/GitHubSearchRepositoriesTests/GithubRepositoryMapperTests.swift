@@ -52,4 +52,11 @@ final class GithubRepositoryMapperTests: XCTestCase {
         }
     }
     
+    func test_givenInvalidJson_expectDecodingFailed() {
+        let stubbedJson = StubJsonFactory.makeInvalidJsonString()
+        
+        let sut = GithubRepositoryMapper()
+        
+        XCTAssertThrowsError(try sut.map(data: Data(stubbedJson.utf8)))
+    }
 }
