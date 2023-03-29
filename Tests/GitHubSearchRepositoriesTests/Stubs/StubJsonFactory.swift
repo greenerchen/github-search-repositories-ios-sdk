@@ -11,6 +11,8 @@ enum StubJsonFactory {
     static func makeFullRequirePropertiesJsonString() -> String {
         #"""
 {
+    "total_count": 2,
+    "incomplete_results": false,
     "items": [
         {
             "name": "stub-1",
@@ -32,6 +34,8 @@ enum StubJsonFactory {
     static func makePartialRequirePropertiesJsonString() -> String {
         #"""
 {
+    "total_count": 2,
+    "incomplete_results": false,
     "items": [
         {
             "name": "stub-1",
@@ -52,6 +56,8 @@ enum StubJsonFactory {
     static func makeInvalidJsonString() -> String {
         #"""
 {
+    "total_count": 2,
+    "incomplete_results": false,
     "items": [
         {
             "name": "stub-1",
