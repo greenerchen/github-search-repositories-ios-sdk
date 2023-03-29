@@ -16,29 +16,34 @@ protocol GitHubSearchRepositoriesCommandProtocol: Command {
     var baseUrl: URL { get }
     var platform: Platform { get }
     var organization: String { get }
-    var completion: ((Result<[GithubRepositoryBrief], Error>) -> Void)? { get set }
-    func parse(data: Data) throws -> [GithubRepositoryBrief]
+    var completion: ((Result<[GithubRepository], Error>) -> Void)? { get set }
+    func parse(data: Data) throws -> [GithubRepository]
 }
 
 public struct GitHubSearchRepositoriesCommand: GitHubSearchRepositoriesCommandProtocol {
     var baseUrl: URL
     var platform: Platform
     var organization: String
-    var completion: ((Result<[GithubRepositoryBrief], Error>) -> Void)?
+    var completion: ((Result<[GithubRepository], Error>) -> Void)?
     var httpClient: HTTPClientProtocol = {
         HTTPClient()
     }()
     
     func execute() {
-        let url = baseUrl.appending(queryItems: [
-            URLQueryItem(name: "q", value: platform.rawValue),
-            URLQueryItem(name: "org", value: organization)
-        ])
+        var url: URL = baseUrl
+        if #available(macOS 13.0, *) {
+            url = baseUrl.appending(queryItems: [
+                URLQueryItem(name: "q", value: platform.rawValue),
+                URLQueryItem(name: "org", value: organization)
+            ])
+        } else {
+            // Fallback on earlier versions
+        }
         httpClient.get(url: url) { result in
             switch result {
             case .success(let data):
                 do {
-                    let models: [GithubRepositoryBrief] = try parse(data: data)
+                    let models: [GithubRepository] = try parse(data: data)
                     completion?(.success(models))
                 } catch {
                     completion?(.failure(error))
@@ -49,9 +54,9 @@ public struct GitHubSearchRepositoriesCommand: GitHubSearchRepositoriesCommandPr
         }
     }
     
-    func parse(data: Data) throws -> [GithubRepositoryBrief] {
+    func parse(data: Data) throws -> [GithubRepository] {
         do {
-            var models = [GithubRepositoryBrief]()
+            var models = [GithubRepository]()
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                let items = json["items"] as? [AnyObject] {
                 for item in items {
@@ -59,7 +64,7 @@ public struct GitHubSearchRepositoriesCommand: GitHubSearchRepositoriesCommandPr
                     let isPrivate = item["private"] as? Bool
                     let repoDescription = item["description"] as? String
                     let language = item["language"] as? String
-                    let model = GithubRepositoryBrief(
+                    let model = GithubRepository(
                         name: name ?? "",
                         isPrivate: isPrivate ?? false,
                         repoDescription: repoDescription ?? "",

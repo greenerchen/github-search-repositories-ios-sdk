@@ -13,7 +13,7 @@ protocol Repository {
 }
 
 protocol GitHubSearchRepositoriesProtocol {
-    func searchRepositories(withPlatform platform: Platform, inOrganization organization: String, completion: ((Result<[GithubRepositoryBrief], Error>) -> Void)?)
+    func searchRepositories(withPlatform platform: Platform, inOrganization organization: String, completion: ((Result<[GithubRepository], Error>) -> Void)?)
 }
 
 public enum Platform: String {
@@ -25,7 +25,7 @@ public class GitHubSearchRepoRepository: Repository, GitHubSearchRepositoriesPro
     var baseUrl = URL(string: "https://api.github.com/search/repositories")!
     var command: Command?
     
-    public func searchRepositories(withPlatform platform: Platform, inOrganization organization: String, completion: ((Result<[GithubRepositoryBrief], Error>) -> Void)?) {
+    public func searchRepositories(withPlatform platform: Platform, inOrganization organization: String, completion: ((Result<[GithubRepository], Error>) -> Void)?) {
         command = GitHubSearchRepositoriesCommand(
             baseUrl: baseUrl,
             platform: platform,

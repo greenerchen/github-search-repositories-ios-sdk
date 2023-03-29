@@ -1,5 +1,5 @@
 //
-//  GithubRepositoryBriefDecodingTests.swift
+//  GithubRepositoryDecodingTests.swift
 //  ModelDecodingTests
 //
 //  Created by Greener Chen on 2022/10/23.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import GitHubSearchRepositories
 
-final class GithubRepositoryBriefDecodingTests: XCTestCase {
+final class GithubRepositoryDecodingTests: XCTestCase {
 
     var sut: GitHubSearchRepositoriesCommandProtocol!
     override func setUpWithError() throws {
