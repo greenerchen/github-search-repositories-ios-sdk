@@ -46,6 +46,24 @@ final class GitHubSearchRepoRepositoryTests: XCTestCase {
         XCTAssertEqual(sut.client.getUrlParameters[1].url, URL(string: "http://a-url.com?q=android&org=meta")!)
     }
     
+    func test_invalidJSONResponse_expectDecodingError() {
+        let invalidJson = Data("invalid json".utf8)
+        let sut = makeSUT()
+        sut.client.stubbedResult = .success(invalidJson)
+        
+        let exp = expectation(description: "Wait for completion")
+        sut.repository.searchRepositories(withPlatform: .ios, inOrganization: "google") { result in
+            switch result {
+            case let .failure(error):
+                XCTAssertNotNil(error)
+            default:
+                XCTFail("Expected failure with decoding error, but got success instead")
+            }
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(url: URL = URL(string: "http://a-url.com")!) -> (repository: GitHubSearchRepoRepository, client: MockHTTPClient) {
