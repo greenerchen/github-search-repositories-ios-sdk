@@ -31,7 +31,7 @@ public class GitHubSearchRepoRepository: GitHubSearchRepoProtocol {
     }
     
     public func searchRepositories(withPlatform platform: Platform, inOrganization organization: String, completion: ((Result<[GithubRepository], Error>) -> Void)?) {
-        url.append(queryItems: [
+        let url = self.url.appending(queryItems: [
             URLQueryItem(name: "q", value: platform.rawValue),
             URLQueryItem(name: "org", value: organization)
         ])
