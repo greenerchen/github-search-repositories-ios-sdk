@@ -47,7 +47,7 @@ final class GitHubSearchRepoRepositoryTests: XCTestCase {
     }
     
     func test_invalidJSONResponse_expectDecodingError() {
-        let invalidJson = Data("invalid json".utf8)
+        let invalidJson = Data(StubJsonFactory.makeInvalidJsonString().utf8)
         let sut = makeSUT()
         sut.client.stubbedResult = .success(invalidJson)
         
