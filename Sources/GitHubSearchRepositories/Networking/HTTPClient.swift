@@ -7,10 +7,8 @@
 
 import Foundation
 
-typealias HTTP_RESPONSE = (Result<Data, Error>) -> Void
-
-protocol HTTPClientProtocol {
-    func get(url: URL, completion: @escaping HTTP_RESPONSE)
+public protocol HTTPClientProtocol {
+    func get(url: URL, completion: @escaping (Result<Data, Error>) -> Void)
 }
 
 enum HTTPRequestError: Error {
@@ -25,7 +23,7 @@ class HTTPClient: HTTPClientProtocol {
         self.session = session
     }
     
-    func get(url: URL, completion: @escaping HTTP_RESPONSE) {
+    func get(url: URL, completion: @escaping (Result<Data, Error>) -> Void) {
         let request = URLRequest(url: url)
         let task = session.dataTask(with: request) { [completion] data, urlResponse, error in
             if let error = error {

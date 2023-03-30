@@ -8,24 +8,15 @@
 import Foundation
 @testable import GitHubSearchRepositories
 
-enum MockHTTPClientError: Error {
-    case noStubbedJson
-}
-
-struct MockHTTPClient: HTTPClientProtocol {
-    var stubbedJson: String?
+class MockHTTPClient: HTTPClientProtocol {
+    var getUrlCallCount = 0
+    var getUrlParameters = [(url: URL, completion: (Result<Data, Error>) -> Void)]()
+    var stubbedResult: Result<Data, Error>!
     
-    func get(url: URL, completion: @escaping GitHubSearchRepositories.HTTP_RESPONSE) {
-        do {
-            guard let stubbedJson = stubbedJson else {
-                completion(.failure(MockHTTPClientError.noStubbedJson))
-                return
-            }
-            let data = stubbedJson.data(using: .utf8)!
-            completion(.success(data))
-        } catch {
-            completion(.failure(error))
-        }
+    func get(url: URL, completion: @escaping (Result<Data, Error>) -> Void) {
+        getUrlCallCount += 1
+        getUrlParameters.append((url, completion))
+        completion(stubbedResult)
     }
 }
 
