@@ -64,6 +64,28 @@ final class GitHubSearchRepoRepositoryTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_repositoryItemsJSONResponse_expectRepositoryItemsResult() {
+        let response = Data(StubJsonFactory.makeExampleResponseJsonString().utf8)
+        let sut = makeSUT()
+        sut.client.stubbedResult = .success(response)
+        
+        let exp = expectation(description: "Wait for completion")
+        sut.repository.searchRepositories(withPlatform: .ios, inOrganization: "google") { result in
+            switch result {
+            case let .success(repos):
+                XCTAssertTrue(repos.count == 1, "\(repos)")
+                XCTAssertEqual(repos[0].name, "Tetris")
+                XCTAssertEqual(repos[0].isPrivate, false)
+                XCTAssertEqual(repos[0].repoDescription, "A C implementation of Tetris using Pennsim through LC4")
+                XCTAssertEqual(repos[0].language, "Assembly")
+            default:
+                XCTFail("Expected success, but got failure instead")
+            }
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(url: URL = URL(string: "http://a-url.com")!) -> (repository: GitHubSearchRepoRepository, client: MockHTTPClient) {
