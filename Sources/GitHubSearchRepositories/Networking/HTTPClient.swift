@@ -7,9 +7,9 @@
 
 import Foundation
 
-typealias HTTP_RESPONSE = (Result<Data, Error>) -> Void
+public typealias HTTP_RESPONSE = (Result<Data, Error>) -> Void
 
-protocol HTTPClientProtocol {
+public protocol HTTPClientProtocol {
     func get(url: URL, completion: @escaping HTTP_RESPONSE)
 }
 

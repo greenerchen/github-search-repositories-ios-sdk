@@ -3,6 +3,9 @@ import PackageDescription
 
 let package = Package(
     name: "GitHubSearchRepositories",
+    platforms: [
+        .macOS(.v13),
+    ],
     products: [
         .library(name: "GitHubSearchRepositories", targets: ["GitHubSearchRepositories"]),
     ],
