@@ -49,6 +49,14 @@ final class HTTPClientTest: XCTestCase {
         }
     }
     
+    func test_get_requestErrorOnNoDataReceived() {
+        let (sut, session) = makeSUT()
+        
+        expect(sut, session: session, url: URL(string: "https://google.com/abcde")!, expectedResult: .corruptedData) {
+            session.complete(with: nil)
+        }
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT() -> (sut: HTTPClient, session: URLSessionSpy) {
@@ -70,6 +78,8 @@ final class HTTPClientTest: XCTestCase {
     private enum RequestResult {
         case error(Error)
         case statusCodeNotOk(code: Int)
+        case corruptedData
+        case succeeded
     }
     
     private func expect(_ sut: HTTPClient, session: URLSessionSpy, url: URL, expectedResult: RequestResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
@@ -104,6 +114,10 @@ final class HTTPClientTest: XCTestCase {
         
         func complete(with error: Error, at index: Int = 0) {
             completions[index](nil, nil, error)
+        }
+        
+        func complete(with data: Data?, at index: Int = 0) {
+            completions[index](data, nil, nil)
         }
     }
 }
