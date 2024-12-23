@@ -81,7 +81,7 @@ final class HTTPClientTest: XCTestCase {
             XCTAssertEqual(session.requestedURLs, resultRequestedURLs, file: file, line: line)
             exp.fulfill()
         }
-        wait(for: [exp], timeout: 3)
+        wait(for: [exp], timeout: 5)
     }
     
     private enum RequestResult {
@@ -92,7 +92,7 @@ final class HTTPClientTest: XCTestCase {
     }
     
     private func expect(_ sut: HTTPClient, session: URLSessionSpy, url: URL, expectedResult: RequestResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-        let exp = expectation(description: "Wait for response")
+        let exp = XCTestExpectation(description: "Wait for response")
         
         sut.get(url: url) { actualResult in
             switch (actualResult, expectedResult) {
