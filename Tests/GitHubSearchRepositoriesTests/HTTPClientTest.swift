@@ -44,7 +44,7 @@ final class HTTPClientTest: XCTestCase {
         let serviceError = HTTPRequestError.statusCodeNotOk(code: 404)
         let (sut, session) = makeSUT()
         
-        expect(sut, session: session, url: URL(string: "https://google.com/abcde")!, expectedResult: .error(serviceError)) {
+        expect(sut, session: session, url: URL(string: "https://google.com/abcde")!, expectedResult: .statusCodeNotOk(code: 404)) {
             session.complete(with: serviceError)
         }
     }
@@ -52,8 +52,17 @@ final class HTTPClientTest: XCTestCase {
     func test_get_requestErrorOnNoDataReceived() {
         let (sut, session) = makeSUT()
         
-        expect(sut, session: session, url: URL(string: "https://google.com/abcde")!, expectedResult: .corruptedData) {
+        expect(sut, session: session, url: URL(string: "https://google.com")!, expectedResult: .corruptedData) {
             session.complete(with: nil)
+        }
+    }
+    
+    func test_get_requestSucceeded() {
+        let data = Data("any data".utf8)
+        let (sut, session) = makeSUT()
+        
+        expect(sut, session: session, url: URL(string: "https://google.com")!, expectedResult: .succeeded(data)) {
+            session.complete(with: data)
         }
     }
     
@@ -79,7 +88,7 @@ final class HTTPClientTest: XCTestCase {
         case error(Error)
         case statusCodeNotOk(code: Int)
         case corruptedData
-        case succeeded
+        case succeeded(Data)
     }
     
     private func expect(_ sut: HTTPClient, session: URLSessionSpy, url: URL, expectedResult: RequestResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
@@ -87,8 +96,12 @@ final class HTTPClientTest: XCTestCase {
         
         sut.get(url: url) { actualResult in
             switch (actualResult, expectedResult) {
-            case let (.failure(actualError), .error(expectedError)) where expectedError is HTTPRequestError:
-                XCTAssertEqual(actualError as! HTTPRequestError, expectedError as!  HTTPRequestError, file: file, line: line)
+            case let (.success(actualData), .succeeded(expectedData)):
+                XCTAssertEqual(actualData, expectedData, file: file, line: line)
+            case let (.failure(actualError), .corruptedData):
+                XCTAssertEqual(actualError as! HTTPRequestError, .corruptedData, file: file, line: line)
+            case let (.failure(actualError), .statusCodeNotOk):
+                XCTAssertEqual(actualError as! HTTPRequestError, .statusCodeNotOk(code: 404), file: file, line: line)
             case let (.failure(actualError), .error(expectedError)):
                 XCTAssertEqual((actualError as NSError).code, (expectedError as NSError).code, file: file, line: line)
             default:
@@ -96,7 +109,8 @@ final class HTTPClientTest: XCTestCase {
             }
             exp.fulfill()
         }
-        wait(for: [exp], timeout: 3)
+        action()
+        wait(for: [exp], timeout: 5)
     }
     
     final class URLSessionSpy: URLSession {
@@ -116,8 +130,14 @@ final class HTTPClientTest: XCTestCase {
             completions[index](nil, nil, error)
         }
         
+        func complete(withStatusCode code: Int, at index: Int = 0) {
+            let response = HTTPURLResponse(url: URL(string: "https://any-url.com")!, statusCode: code, httpVersion: nil, headerFields: nil)
+            completions[index](nil, response, nil)
+        }
+        
         func complete(with data: Data?, at index: Int = 0) {
-            completions[index](data, nil, nil)
+            let response = HTTPURLResponse(url: URL(string: "https://any-url.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+            completions[index](data, response, nil)
         }
     }
 }
