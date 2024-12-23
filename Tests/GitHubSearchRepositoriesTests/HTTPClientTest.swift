@@ -31,6 +31,15 @@ final class HTTPClientTest: XCTestCase {
         expect(sut, session: session, whenRequestURL: url, resultRequestedURLs: [url, url])
     }
     
+    func test_get_requestErrorOnClientError() {
+        let clientError = NSError(domain: "client error", code: -1003)
+        let (sut, session) = makeSUT()
+        
+        expect(sut, session: session, url: URL(string: "https://a.com")!, expectedResult: .error(clientError)) {
+            session.complete(with: clientError)
+        }
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT() -> (sut: HTTPClient, session: URLSessionSpy) {
@@ -49,15 +58,40 @@ final class HTTPClientTest: XCTestCase {
         wait(for: [exp], timeout: 3)
     }
     
+    private enum RequestResult {
+        case error(Error)
+    }
+    
+    private func expect(_ sut: HTTPClient, session: URLSessionSpy, url: URL, expectedResult: RequestResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Wait for response")
+        
+        sut.get(url: url) { actualResult in
+            switch (actualResult, expectedResult) {
+            case let (.failure(actualError), .error(expectedError)):
+                XCTAssertEqual((actualError as NSError).code, (expectedError as NSError).code, file: file, line: line)
+            default:
+                break
+            }
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 3)
+    }
+    
     final class URLSessionSpy: URLSession {
         var requestedURLs = [URL]()
+        var completions = [(Data?, URLResponse?, (any Error)?) -> Void]()
         
         private let session = URLSessionSpy.shared
         
         override func dataTask(with request: URLRequest, completionHandler: @escaping @Sendable (Data?, URLResponse?, (any Error)?) -> Void
         ) -> URLSessionDataTask {
             requestedURLs.append(request.url!)
+            completions.append(completionHandler)
             return session.dataTask(with: request, completionHandler: completionHandler)
+        }
+        
+        func complete(with error: Error, at index: Int = 0) {
+            completions[index](nil, nil, error)
         }
     }
 }
