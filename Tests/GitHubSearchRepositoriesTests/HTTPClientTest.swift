@@ -11,9 +11,21 @@ import XCTest
 final class HTTPClientTest: XCTestCase {
 
     func test_init_noUrlRequested() {
-        let (sut, session) = makeSUT()
+        let (_, session) = makeSUT()
         
         XCTAssertEqual(session.requestedURLs, [])
+    }
+    
+    func test_get_UrlRequested() {
+        let url = URL(string: "https://a.com")!
+        let (sut, session) = makeSUT()
+        let exp = expectation(description: "Wait for response")
+        
+        sut.get(url: url) { _ in
+            XCTAssertEqual(session.requestedURLs, [url])
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 3)
     }
     
     // MARK: - Helpers
@@ -27,9 +39,12 @@ final class HTTPClientTest: XCTestCase {
     final class URLSessionSpy: URLSession {
         var requestedURLs = [URL]()
         
-        override func dataTask(with request: URLRequest) -> URLSessionDataTask {
+        private let session = URLSessionSpy.shared
+        
+        override func dataTask(with request: URLRequest, completionHandler: @escaping @Sendable (Data?, URLResponse?, (any Error)?) -> Void
+        ) -> URLSessionDataTask {
             requestedURLs.append(request.url!)
-            return URLSessionSpy.shared.dataTask(with: request)
+            return session.dataTask(with: request, completionHandler: completionHandler)
         }
     }
 }
