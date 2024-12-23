@@ -17,6 +17,9 @@ protocol GitHubSearchRepoProtocol: Repository {
     func searchRepositories(withPlatform platform: Platform, inOrganization organization: String, completion: ((Result<[GithubRepository], Error>) -> Void)?)
     /// Support Combine
     func searchRepositories(withPlatform platform: Platform, inOrganization organization: String) -> Future<[GithubRepository], Error>
+    /// Modern Concurrency
+    func searchRepositories(withPlatform platform: Platform, inOrganization organization: String) async ->
+    Result<[GithubRepository], Error>
 }
 
 public enum Platform: String {
@@ -57,6 +60,15 @@ public class GitHubSearchRepoRepository: GitHubSearchRepoProtocol {
         Future { promise in
             self.searchRepositories(withPlatform: platform, inOrganization: organization) { result in
                 promise(result)
+            }
+        }
+    }
+    
+    public func searchRepositories(withPlatform platform: Platform, inOrganization organization: String) async ->
+    Result<[GithubRepository], Error> {
+        await withCheckedContinuation { continuation in
+            self.searchRepositories(withPlatform: platform, inOrganization: organization) { result in
+                continuation.resume(returning: result)
             }
         }
     }
