@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol Repository {
     var client: HTTPClientProtocol { get set }
@@ -14,6 +15,8 @@ protocol Repository {
 
 protocol GitHubSearchRepoProtocol: Repository {
     func searchRepositories(withPlatform platform: Platform, inOrganization organization: String, completion: ((Result<[GithubRepository], Error>) -> Void)?)
+    /// Support Combine
+    func searchRepositories(withPlatform platform: Platform, inOrganization organization: String) -> Future<[GithubRepository], Error>
 }
 
 public enum Platform: String {
@@ -46,6 +49,14 @@ public class GitHubSearchRepoRepository: GitHubSearchRepoProtocol {
                 }
             case .failure(let error):
                 completion?(.failure(error))
+            }
+        }
+    }
+    
+    public func searchRepositories(withPlatform platform: Platform, inOrganization organization: String) -> Future<[GithubRepository], Error> {
+        Future { promise in
+            self.searchRepositories(withPlatform: platform, inOrganization: organization) { result in
+                promise(result)
             }
         }
     }
