@@ -33,5 +33,30 @@ struct Demo {
                 debugPrint(error.localizedDescription)
         }
     }
+
+    func demoCombine() {
+        _ = repository.searchRepositories(withPlatform: .ios, inOrganization: "google")
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case let .failure(error):
+                    debugPrint("Expected success, but got failure instead \(error)")
+                case .finished:
+                    break
+                }
+            }, receiveValue: { repos in
+                debugPrint(repos)
+            })
+        }
+    }
+
+    func demoModernConcurrency() async {
+        let result = await repository.searchRepositories(withPlatform: .ios, inOrganization: "github")
+        switch result {
+            case .success(let repos):
+                debugPrint(repos)
+            case .failure(let error):
+                debugPrint(error.localizedDescription)
+        }
+    }
 }
 ```
