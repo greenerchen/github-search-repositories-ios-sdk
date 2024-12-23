@@ -11,7 +11,7 @@ public protocol HTTPClientProtocol {
     func get(url: URL, completion: @escaping (Result<Data, Error>) -> Void)
 }
 
-enum HTTPRequestError: Error {
+enum HTTPRequestError: Error, Equatable {
     case statusCodeNotOk(code: Int)
     case corruptedData
 }
