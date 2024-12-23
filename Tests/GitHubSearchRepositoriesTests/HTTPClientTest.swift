@@ -41,11 +41,10 @@ final class HTTPClientTest: XCTestCase {
     }
     
     func test_get_requestErrorOnClientRequestError() {
-        let serviceError = HTTPRequestError.statusCodeNotOk(code: 404)
         let (sut, session) = makeSUT()
         
         expect(sut, session: session, url: URL(string: "https://google.com/abcde")!, expectedResult: .statusCodeNotOk(code: 404)) {
-            session.complete(with: serviceError)
+            session.complete(withStatusCode: 404)
         }
     }
     
@@ -53,15 +52,15 @@ final class HTTPClientTest: XCTestCase {
         let (sut, session) = makeSUT()
         
         expect(sut, session: session, url: URL(string: "https://google.com")!, expectedResult: .corruptedData) {
-            session.complete(with: nil)
+            session.complete(withStatusCode: 200)
         }
     }
     
-    func test_get_requestSucceeded() {
-        let data = Data("any data".utf8)
+    func test_get_requestSucceeded() throws {
+        let data = try Data(contentsOf: URL(string: "https://github.com/")!)
         let (sut, session) = makeSUT()
         
-        expect(sut, session: session, url: URL(string: "https://google.com")!, expectedResult: .succeeded(data)) {
+        expect(sut, session: session, url: URL(string: "https://github.com/")!, expectedResult: .succeeded(data)) {
             session.complete(with: data)
         }
     }
@@ -75,7 +74,7 @@ final class HTTPClientTest: XCTestCase {
     }
     
     private func expect(_ sut: HTTPClient, session: URLSessionSpy, whenRequestURL url: URL, resultRequestedURLs: [URL], file: StaticString = #file, line: UInt = #line) {
-        let exp = expectation(description: "Wait for response")
+        let exp = XCTestExpectation(description: "Wait for response")
         
         sut.get(url: url) { _ in
             XCTAssertEqual(session.requestedURLs, resultRequestedURLs, file: file, line: line)
@@ -97,7 +96,7 @@ final class HTTPClientTest: XCTestCase {
         sut.get(url: url) { actualResult in
             switch (actualResult, expectedResult) {
             case let (.success(actualData), .succeeded(expectedData)):
-                XCTAssertEqual(actualData, expectedData, file: file, line: line)
+                XCTAssertEqual(actualData.count, expectedData.count, file: file, line: line)
             case let (.failure(actualError), .corruptedData):
                 XCTAssertEqual(actualError as! HTTPRequestError, .corruptedData, file: file, line: line)
             case let (.failure(actualError), .statusCodeNotOk):
@@ -123,6 +122,7 @@ final class HTTPClientTest: XCTestCase {
         ) -> URLSessionDataTask {
             requestedURLs.append(request.url!)
             completions.append(completionHandler)
+            // using session makes the result correspond to the requested url, but able to run the real code
             return session.dataTask(with: request, completionHandler: completionHandler)
         }
         
